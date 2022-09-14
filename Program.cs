@@ -1,18 +1,4 @@
-﻿using System.CodeDom.Compiler;
-using System.Collections.Generic;
-using System.Collections;
-using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.Serialization;
-using System.Text.RegularExpressions;
-using System.Text;
-using System;
-
-namespace AmazonTest
+﻿namespace AmazonTest
 {
     public class Result
     {
@@ -41,7 +27,7 @@ namespace AmazonTest
             var connections = new List<Tuple<int, int>>();
             for (int i = 0; i < related.Count; i++)
             {
-                for (int j = 0; j < related[0].Count(); j++)
+                for (int j = 0; j < related[0].Length; j++)
                 {
                     if (i == j)
                         continue;
