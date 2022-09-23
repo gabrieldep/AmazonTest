@@ -21,9 +21,7 @@
                     break;
                 parcels.RemoveAt(0);
                 for (int j = 0; j < parcels.Count; j++)
-                {
                     parcels[j] -= valueToRemove;
-                }
                 days++;
                 parcels = parcels.Where(p => p != 0).ToList();
                 if (parcels.Count == 0)
