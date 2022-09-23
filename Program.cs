@@ -63,10 +63,8 @@
             rank = rank.OrderBy(r => r).ToArray();
             long imbalance = 0;
             for (int i = 0; i < rank.Length - 1; i++)
-            {
                 if (rank[i + 1] - rank[i] > 1)
                     imbalance++;
-            }
             return imbalance;
         }
     }
