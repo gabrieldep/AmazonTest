@@ -2,58 +2,72 @@
 {
     public class Result
     {
-        internal static List<int> MinimalHeaviestSetA(List<int> arr)
+        public static void Main()
         {
-            arr = arr.OrderByDescending(a => a).ToList();
-            var subsetA = new List<int>();
-            var totalSum = arr.Sum();
-            var subsetSum = 0;
+            Console.WriteLine(GetMinimumDays(new List<int> { 4, 2, 3, 4 }));
+            Console.WriteLine(FindTotalImbalance(new List<int> { 4, 1, 3, 2 }));
+        }
+
+        public static int GetMinimumDays(List<int> parcels)
+        {
+            int days = 0;
+            parcels = parcels.Where(p => p != 0).OrderBy(p => p).ToList();
             while (true)
             {
-                var aux = arr[0];
-                totalSum -= aux;
-                arr.Remove(aux);
-                subsetA.Add(aux);
-                subsetSum += aux;
-                if (subsetSum > totalSum)
+                if (parcels.Count == 0)
+                    break;
+                int valueToRemove = parcels[0];
+                if (valueToRemove == 0)
+                    break;
+                parcels.RemoveAt(0);
+                for (int j = 0; j < parcels.Count; j++)
+                {
+                    parcels[j] -= valueToRemove;
+                }
+                days++;
+                parcels = parcels.Where(p => p != 0).ToList();
+                if (parcels.Count == 0)
                     break;
             }
-            subsetA.Reverse();
-            return subsetA;
+            return days;
         }
 
-        public static int CountGroups(List<string> related)
+        internal static long FindTotalImbalance(List<int> rank)
         {
-            var connections = new List<Tuple<int, int>>();
-            for (int i = 0; i < related.Count; i++)
-            {
-                for (int j = 0; j < related[0].Length; j++)
-                {
-                    if (i == j)
-                        continue;
-                    if (related[i][j] == 1)
-                    {
-                        if (connections.Contains(new(j, i)))
-                            continue;
-                        else
-                            connections.Add(new(j, i));
-                    }
-                }
-            }
-            return GetGroupCount(ref connections, 0);
+            return GetImbalanceRecursive(ref rank, 2);
         }
 
-        internal static int GetGroupCount(ref List<Tuple<int, int>> groups, int index)
+        internal static long GetImbalanceRecursive(ref List<int> rank, int size)
         {
-            if (index == groups.Count)
+            if (size > rank.Count)
                 return 0;
-            var tuple = groups.FirstOrDefault(g => g.Item1 == index);
-            if (tuple == null)
-                return 1;
-            else
-                groups.Remove(tuple);
-            var rtrn = GetGroupCount(ref groups, tuple.Item2);
-            return rtrn;
+
+            var rankAux = rank.ToArray();
+            long count = 0;
+            int skipAux = 0;
+            while (true)
+            {
+                if (rankAux.Length == 0)
+                    break;
+                var aux = rankAux.Skip(skipAux).Take(size).ToArray();
+                if (aux.Length != size)
+                    break;
+                count += GetImbalanceGroup(aux);
+                skipAux++;
+            }
+            return count + GetImbalanceRecursive(ref rank, size + 1);
+        }
+
+        internal static long GetImbalanceGroup(int[] rank)
+        {
+            rank = rank.OrderBy(r => r).ToArray();
+            long imbalance = 0;
+            for (int i = 0; i < rank.Length - 1; i++)
+            {
+                if ((rank[i + 1]) - rank[i] > 1)
+                    imbalance++;
+            }
+            return imbalance;
         }
     }
 }
